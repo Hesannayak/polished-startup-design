@@ -31,8 +31,8 @@ export function SiteNav() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
         <Link to="/" className="group flex items-center gap-2.5">
           <span className="btn-gradient flex size-8 items-center justify-center rounded-lg shadow-[0_0_18px_-4px] shadow-primary/60 transition-transform duration-300 group-hover:scale-105">
-            <svg viewBox="0 0 24 24" className="size-4.5 text-primary-foreground" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
-              <path d="M17.5 8.5a6.5 6.5 0 1 0 0 7" />
+            <svg viewBox="0 0 24 24" className="size-4 text-primary-foreground" fill="currentColor">
+              <path d="M12 2.5 3.5 9.2c-.4.3-.4.9 0 1.2l8.1 10.6c.2.3.6.3.8 0l8.1-10.6c.4-.3.4-.9 0-1.2L12 2.5Z" />
             </svg>
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">Oton</span>
@@ -84,8 +84,8 @@ export function SiteFooter() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <span className="btn-gradient flex size-7 items-center justify-center rounded-lg">
-            <svg viewBox="0 0 24 24" className="size-4 text-primary-foreground" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
-              <path d="M17.5 8.5a6.5 6.5 0 1 0 0 7" />
+            <svg viewBox="0 0 24 24" className="size-4 text-primary-foreground" fill="currentColor">
+              <path d="M12 2.5 3.5 9.2c-.4.3-.4.9 0 1.2l8.1 10.6c.2.3.6.3.8 0l8.1-10.6c.4-.3.4-.9 0-1.2L12 2.5Z" />
             </svg>
           </span>
           <div>
