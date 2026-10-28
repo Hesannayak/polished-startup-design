@@ -1,9 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { PriceChart } from "@/components/price-chart";
 import { SiteFooter, SiteNav } from "@/components/site-chrome";
 import { TokenAvatar } from "@/components/token-card";
+import type { Token } from "@/data/tokens";
 import { TOKENS } from "@/data/tokens";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/token/$symbol")({
     return { token };
   },
   head: ({ match }) => {
-    const token = match.context.token;
+    const token: Token = match.context.token;
     return {
       meta: [
         { title: `${token.name} ($${token.symbol}) · Oton` },
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/token/$symbol")({
   component: TokenPage,
 });
 
-function HeaderStats({ token }: { token: ReturnType<typeof Route.useRouteContext>["token"] }) {
+function HeaderStats({ token }: { token: Token }) {
   const stats = [
     { label: "Market cap", value: token.marketCap },
     { label: "Price", value: token.price },
@@ -76,14 +77,12 @@ function CopyButton({ value }: { value: string }) {
   );
 }
 
-function ChartCard({ token }: { token: ReturnType<typeof Route.useRouteContext>["token"] }) {
+function ChartCard({ token }: { token: Token }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
       <div className="flex items-center justify-between border-b border-border/60 px-5 py-3.5">
         <span className="micro-label text-muted-foreground">Price</span>
-        <span className="font-mono text-xs text-muted-foreground">
-          1D · ${token.symbol}
-        </span>
+        <span className="font-mono text-xs text-muted-foreground">1D · ${token.symbol}</span>
       </div>
       <div className="px-2 py-4">
         <PriceChart data={token.priceHistory} />
@@ -92,9 +91,10 @@ function ChartCard({ token }: { token: ReturnType<typeof Route.useRouteContext>[
   );
 }
 
-function Tabs({ token }: { token: ReturnType<typeof Route.useRouteContext>["token"] }) {
+function Tabs({ token }: { token: Token }) {
   const [tab, setTab] = useState<"activity" | "holders">("activity");
-  const rows =
+
+  const rows: { id: string; cells: ReactNode[] }[] =
     tab === "activity"
       ? token.activity.map((a) => ({
           id: `${a.amount}-${a.time}`,
@@ -173,7 +173,7 @@ function Tabs({ token }: { token: ReturnType<typeof Route.useRouteContext>["toke
   );
 }
 
-function TradePanel() {
+function TradePanel({ symbol }: { symbol: string }) {
   const [side, setSide] = useState<"buy" | "sell">("buy");
   const [amount, setAmount] = useState("");
   const [slippage, setSlippage] = useState("5");
@@ -254,18 +254,13 @@ function TradePanel() {
         Connect Wallet
       </button>
       <p className="mt-3 text-center text-xs text-muted-foreground">
-        Connect a TON wallet to {side === "buy" ? "buy" : "sell"} ${" "}
-        {Route.useRouteContext().token.symbol}
+        Connect a TON wallet to {side === "buy" ? "buy" : "sell"} ${symbol}
       </p>
     </div>
   );
 }
 
-function BondingCurveCard({
-  token,
-}: {
-  token: ReturnType<typeof Route.useRouteContext>["token"];
-}) {
+function BondingCurveCard({ token }: { token: Token }) {
   return (
     <div className="rounded-2xl border border-border/70 bg-card p-5">
       <div className="flex items-center justify-between">
@@ -315,7 +310,7 @@ function TokenPage() {
             <Tabs token={token} />
           </div>
           <div className="flex flex-col gap-4">
-            <TradePanel />
+            <TradePanel symbol={token.symbol} />
             <BondingCurveCard token={token} />
             <div className="rounded-2xl border border-border/70 bg-card p-5">
               <h3 className="text-sm font-semibold">About {token.name}</h3>

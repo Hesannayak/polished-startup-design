@@ -1,13 +1,14 @@
 import { useId } from "react";
 
-function smoothPath(points: { x: number; y: number }[]) {
-  if (points.length < 2) return "";
-  let d = `M ${points[0].x} ${points[0].y}`;
+type Pt = { x: number; y: number };
+
+function smoothPath(points: Pt[]): string {
+  let d = `M ${points[0]!.x.toFixed(1)} ${points[0]!.y.toFixed(1)}`;
   for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[Math.max(0, i - 1)];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[Math.min(points.length - 1, i + 2)];
+    const p0 = points[Math.max(0, i - 1)]!;
+    const p1 = points[i]!;
+    const p2 = points[i + 1]!;
+    const p3 = points[Math.min(points.length - 1, i + 2)]!;
     const c1x = p1.x + (p2.x - p0.x) / 6;
     const c1y = p1.y + (p2.y - p0.y) / 6;
     const c2x = p2.x - (p3.x - p1.x) / 6;
@@ -19,6 +20,8 @@ function smoothPath(points: { x: number; y: number }[]) {
 
 export function PriceChart({ data }: { data: number[] }) {
   const gradientId = useId();
+  if (data.length < 2) return null;
+
   const W = 640;
   const H = 280;
   const PAD = 12;
@@ -26,14 +29,15 @@ export function PriceChart({ data }: { data: number[] }) {
   const min = Math.min(...data);
   const max = Math.max(...data);
   const span = max - min || 1;
-  const points = data.map((v, i) => ({
+  const points: Pt[] = data.map((v, i) => ({
     x: PAD + (i / (data.length - 1)) * (W - PAD * 2),
     y: H - PAD - ((v - min) / span) * (H - PAD * 2),
   }));
 
   const line = smoothPath(points);
-  const area = `${line} L ${points[points.length - 1].x} ${H} L ${points[0].x} ${H} Z`;
-  const last = points[points.length - 1];
+  const lastPt = points[points.length - 1]!;
+  const firstPt = points[0]!;
+  const area = `${line} L ${lastPt.x.toFixed(1)} ${H} L ${firstPt.x.toFixed(1)} ${H} Z`;
 
   return (
     <svg
@@ -74,8 +78,8 @@ export function PriceChart({ data }: { data: number[] }) {
         strokeWidth="2.5"
         strokeLinecap="round"
       />
-      <circle cx={last.x} cy={last.y} r="4" fill="oklch(0.8 0.11 240)" />
-      <circle cx={last.x} cy={last.y} r="9" fill="oklch(0.8 0.11 240 / 0.2)" />
+      <circle cx={lastPt.x} cy={lastPt.y} r="4" fill="oklch(0.8 0.11 240)" />
+      <circle cx={lastPt.x} cy={lastPt.y} r="9" fill="oklch(0.8 0.11 240 / 0.2)" />
     </svg>
   );
 }
